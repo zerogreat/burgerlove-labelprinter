@@ -311,12 +311,15 @@ form input[type="text"], form input[type="number"], form input[type="password"] 
   cursor: pointer;
 }
 
-#crop-wrap { display: inline-block; margin-top: 10px; }
+#crop-wrap { display: inline-block; margin-top: 10px; touch-action: none; }
 #crop-canvas {
   display: block;
   border-radius: 10px;
   border: 2px solid var(--border);
   touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
   cursor: grab;
 }
 
