@@ -119,20 +119,33 @@
     out.height = OUTPUT;
     out.getContext("2d").drawImage(img, outX, outY, img.width * outScale, img.height * outScale);
 
-    out.toBlob((blob) => {
-      const file = new File([blob], "photo.jpg", { type: "image/jpeg" });
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      photoUpload.files = dt.files;
+    // toDataURL is used instead of the async toBlob() here because
+    // toBlob's callback is unreliable on iOS Safari - it can silently
+    // never fire for camera-sourced images, which made "Approve Photo"
+    // appear to do nothing on iPad.
+    const dataUrl = out.toDataURL("image/jpeg", 0.9);
+    const blob = dataUrlToBlob(dataUrl);
+    const file = new File([blob], "photo.jpg", { type: "image/jpeg" });
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    photoUpload.files = dt.files;
 
-      photoPreview.innerHTML = "";
-      const previewImg = document.createElement("img");
-      previewImg.className = "thumb-large";
-      previewImg.src = URL.createObjectURL(blob);
-      photoPreview.appendChild(previewImg);
+    photoPreview.innerHTML = "";
+    const previewImg = document.createElement("img");
+    previewImg.className = "thumb-large";
+    previewImg.src = dataUrl;
+    photoPreview.appendChild(previewImg);
 
-      stage.hidden = true;
-      input.value = "";
-    }, "image/jpeg", 0.9);
+    stage.hidden = true;
+    input.value = "";
   });
+
+  function dataUrlToBlob(dataUrl) {
+    const [header, base64] = dataUrl.split(",");
+    const mime = header.match(/:(.*?);/)[1];
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+  }
 })();
