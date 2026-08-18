@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="app" data-today="{{ today }}">
+  <header class="topbar">
+    <div class="field field-name">
+      <label for="initials">Your Name</label>
+      <input id="initials" type="text" maxlength="16" autocomplete="off" placeholder="e.g. Mike T.">
+    </div>
+    <a class="admin-link" href="/admin/items">Admin</a>
+  </header>
+
+  <main class="item-list-wrap">
+    <div class="item-list" id="item-list">
+      {% for item in items %}
+      <div class="card" data-name="{{ item.name }}" data-shelf-life="{{ item.shelf_life_days or '' }}">
+        {% if item.photo_path %}
+          <img class="card-icon" src="/photos/{{ item.photo_path }}" alt="">
+        {% else %}
+          <span class="card-icon card-icon-fallback">{{ item.name | initials }}</span>
+        {% endif %}
+        <span class="card-name">{{ item.name }}</span>
+        <button type="button" class="print-btn" aria-label="Print {{ item.name }} label">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="6" y="2" width="12" height="6.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+            <rect x="2" y="8" width="20" height="8" rx="2" fill="currentColor"></rect>
+            <circle cx="17.3" cy="12" r="0.9" fill="rgba(0,0,0,0.32)"></circle>
+            <rect x="6" y="15" width="12" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+            <path d="M8.3 17.5h7.4M8.3 19.5h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </div>
+      {% else %}
+      <p class="empty-state">No food items yet — add some in <a href="/admin/items">Admin</a>.</p>
+      {% endfor %}
+    </div>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/print.js?v={{ static_version('print.js') }}"></script>
+{% endblock %}

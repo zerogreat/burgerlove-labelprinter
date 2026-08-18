@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin">
+  <nav class="admin-nav">
+    <a href="/admin/items">&larr; Items</a>
+  </nav>
+  <h1>Print Log</h1>
+  <table>
+    <thead>
+      <tr><th>Printed at</th><th>Item</th><th>Initials</th><th>Prepped</th><th>Expires</th></tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td>{{ log.printed_at.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td>{{ log.food_name }}</td>
+        <td>{{ log.initials }}</td>
+        <td>{{ log.prepped_date }}</td>
+        <td>{{ log.expiration_date or "—" }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">No prints logged yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

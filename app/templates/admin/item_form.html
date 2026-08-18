@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin">
+  <nav class="admin-nav">
+    <a href="/admin/items">&larr; Items</a>
+  </nav>
+  <h1>{{ "Edit" if item else "New" }} Food Item</h1>
+  <form method="post" enctype="multipart/form-data" action="{{ ('/admin/items/' ~ item.id ~ '/edit') if item else '/admin/items/new' }}">
+    <label>Name
+      <input type="text" name="name" value="{{ item.name if item else '' }}" maxlength="32" required>
+    </label>
+    <label>Shelf life in days (optional)
+      <input type="number" min="1" name="shelf_life_days" value="{{ item.shelf_life_days if item and item.shelf_life_days else '' }}">
+    </label>
+
+    <section class="photo-section">
+      <h2>Photo</h2>
+      <p class="hint">For the item picker only — not printed on the label.</p>
+
+      <div id="photo-preview">
+        {% if item and item.photo_path %}
+          <div class="photo-preview-wrap">
+            <img class="thumb-large" src="/photos/{{ item.photo_path }}" alt="">
+            <button type="button" id="photo-delete-btn" class="photo-delete-btn" data-item-id="{{ item.id }}" aria-label="Delete photo" title="Delete photo">&times;</button>
+          </div>
+        {% endif %}
+      </div>
+
+      <input type="file" id="photo-input" accept="image/*" capture="environment">
+      <input type="file" name="photo" id="photo-upload" hidden>
+
+      <div id="crop-stage" hidden>
+        <div id="crop-wrap">
+          <canvas id="crop-canvas"></canvas>
+        </div>
+        <label class="zoom-label">Zoom
+          <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1">
+        </label>
+        <div class="crop-actions">
+          <button type="button" id="crop-save" class="button-light button-light-green">Approve Photo</button>
+          <button type="button" id="crop-cancel" class="button-light">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <button type="submit">Save Food Item</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="/static/crop.js"></script>
+{% endblock %}
