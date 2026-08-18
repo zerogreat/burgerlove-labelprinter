@@ -1,0 +1,190 @@
+[
+  {
+    "name": "Avocado (Smashed)",
+    "shelf_life_days": 2
+  },
+  {
+    "name": "Bacon (Cooked)",
+    "shelf_life_days": 14
+  },
+  {
+    "name": "Barbeque Pork",
+    "shelf_life_days": 10
+  },
+  {
+    "name": "Beef Patty",
+    "shelf_life_days": 3
+  },
+  {
+    "name": "Blueberry Topping",
+    "shelf_life_days": 45
+  },
+  {
+    "name": "Brownie Bites",
+    "shelf_life_days": 21
+  },
+  {
+    "name": "Burger Love Sauce",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Butterfinger",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Campfire Sauce",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Caramel Sauce",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Charred Jalapeno",
+    "shelf_life_days": 5
+  },
+  {
+    "name": "Cheesecake Bites",
+    "shelf_life_days": 30
+  },
+  {
+    "name": "Cherry Topping",
+    "shelf_life_days": 180
+  },
+  {
+    "name": "Chicken Breast (6 oz, brined)",
+    "shelf_life_days": 4
+  },
+  {
+    "name": "Chives (Chopped)",
+    "shelf_life_days": 5
+  },
+  {
+    "name": "Chocolate Chunks (Topping)",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Coffee Syrup",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Coleslaw",
+    "shelf_life_days": 10
+  },
+  {
+    "name": "Cookie Dough (Topping)",
+    "shelf_life_days": 90
+  },
+  {
+    "name": "Cookies (Frozen Dough)",
+    "shelf_life_days": 180
+  },
+  {
+    "name": "Fries (Blanched)",
+    "shelf_life_days": 7
+  },
+  {
+    "name": "Garlic Aioli",
+    "shelf_life_days": 60
+  },
+  {
+    "name": "Graham Pie Crust (Crumbs)",
+    "shelf_life_days": 120
+  },
+  {
+    "name": "Heath Toffee",
+    "shelf_life_days": 90
+  },
+  {
+    "name": "Hot Fudge",
+    "shelf_life_days": 90
+  },
+  {
+    "name": "Key Lime Syrup",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Lettuce",
+    "shelf_life_days": 7
+  },
+  {
+    "name": "Malt Powder",
+    "shelf_life_days": 180
+  },
+  {
+    "name": "Maple-Bourbon Glaze",
+    "shelf_life_days": 120
+  },
+  {
+    "name": "Mint Syrup",
+    "shelf_life_days": 180
+  },
+  {
+    "name": "Mushrooms (Sauteed)",
+    "shelf_life_days": 5
+  },
+  {
+    "name": "Onion (Pickled Red)",
+    "shelf_life_days": 90
+  },
+  {
+    "name": "Onion (Sliced)",
+    "shelf_life_days": 7
+  },
+  {
+    "name": "Onions (Caramelized)",
+    "shelf_life_days": 5
+  },
+  {
+    "name": "Onions (Crispy)",
+    "shelf_life_days": 5
+  },
+  {
+    "name": "Oreo (Crumbled)",
+    "shelf_life_days": 90
+  },
+  {
+    "name": "Peaches (Canned)",
+    "shelf_life_days": 45
+  },
+  {
+    "name": "Peanut Butter",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Pineapple (Chopped)",
+    "shelf_life_days": 45
+  },
+  {
+    "name": "Pineapple (Grilled)",
+    "shelf_life_days": 7
+  },
+  {
+    "name": "Reese's Cup",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Samurai Sauce",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Strawberry Topping",
+    "shelf_life_days": 180
+  },
+  {
+    "name": "Teriyaki Glaze",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Tomato (Sliced)",
+    "shelf_life_days": 3
+  },
+  {
+    "name": "Walnut Topping",
+    "shelf_life_days": null
+  },
+  {
+    "name": "Zesty Ranch Sauce",
+    "shelf_life_days": 14
+  }
+]
