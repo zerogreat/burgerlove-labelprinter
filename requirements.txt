@@ -1,7 +1,18 @@
-fastapi>=0.115
-uvicorn[standard]>=0.32
-sqlmodel>=0.0.22
-jinja2>=3.1
-python-multipart>=0.0.9
-itsdangerous>=2.2
-pillow>=10.0
+# Pinned to the exact versions running in the production image (built
+# 2026-08-18). These were floating (>=) until now: a rebuild pulled
+# sqlmodel 0.0.48, which rejects the naive datetime PrintLog.printed_at has
+# always stored, so every single print would fail with a 500. Bump these
+# deliberately and re-run the print tests — not by accident, and never on the
+# kitchen Pi without testing the rebuild first.
+fastapi==0.141.1
+uvicorn[standard]==0.52.3
+sqlmodel==0.0.39
+SQLAlchemy==2.0.52
+jinja2==3.1.6
+python-multipart==0.0.32
+itsdangerous==2.2.0
+pillow==12.3.0
+
+# Supplies the IANA timezone database for zoneinfo. Debian slim images don't
+# reliably ship /usr/share/zoneinfo, and the label dates depend on it.
+tzdata>=2024.1

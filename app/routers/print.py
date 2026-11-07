@@ -1,4 +1,6 @@
-from datetime import date
+import os
+from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, JSONResponse, Response
@@ -14,6 +16,34 @@ from ..zpl import build_zpl
 
 router = APIRouter()
 
+# The kitchen's local time. The container clocks in UTC, so deriving "today"
+# from the bare system clock would date any label printed after 19:00 EST as
+# tomorrow. The Pi's own timezone is America/New_York; override with
+# APP_TIMEZONE if the restaurant ever moves.
+APP_TIMEZONE = os.getenv("APP_TIMEZONE", "America/New_York")
+
+
+def _local_today() -> date:
+    return datetime.now(ZoneInfo(APP_TIMEZONE)).date()
+
+
+def _print_dates(session: Session, food_name: str) -> tuple[date, date | None]:
+    """Resolve the prep and use-by dates at print time, from the server's
+    clock — never from the browser.
+
+    The kitchen screen is left open for days at a time, so any date the page
+    captured at load time (as the previous data-today attribute did) goes
+    stale: a label printed a week after the page was opened would carry that
+    old date. Deriving both dates here also means a cached copy of the old
+    JavaScript can't reintroduce stale dates, since whatever it submits is
+    ignored.
+    """
+    prepped = _local_today()
+    item = session.exec(select(FoodItem).where(FoodItem.name == food_name.strip())).first()
+    shelf_life = item.shelf_life_days if item else None
+    expiration = prepped + timedelta(days=shelf_life) if shelf_life else None
+    return prepped, expiration
+
 
 @router.get("/", response_class=HTMLResponse)
 def index(request: Request, session: Session = Depends(get_session)):
@@ -21,7 +51,7 @@ def index(request: Request, session: Session = Depends(get_session)):
     return templates.TemplateResponse(
         request,
         "index.html",
-        {"items": items, "today": date.today().isoformat()},
+        {"items": items},
     )
 
 
@@ -29,12 +59,16 @@ def index(request: Request, session: Session = Depends(get_session)):
 def print_label(
     food_name: str = Form(...),
     initials: str = Form(...),
-    prepped_date: str = Form(...),
-    expiration_date: str = Form(""),
     session: Session = Depends(get_session),
 ):
     staff_name = format_staff_name(initials)
-    zpl = build_zpl(food_name, staff_name, prepped_date, expiration_date or None)
+    prepped, expiration = _print_dates(session, food_name)
+    zpl = build_zpl(
+        food_name,
+        staff_name,
+        prepped.isoformat(),
+        expiration.isoformat() if expiration else None,
+    )
 
     error = None
     try:
@@ -45,8 +79,8 @@ def print_label(
     log = PrintLog(
         food_name=food_name.strip(),
         initials=staff_name,
-        prepped_date=date.fromisoformat(prepped_date),
-        expiration_date=date.fromisoformat(expiration_date) if expiration_date else None,
+        prepped_date=prepped,
+        expiration_date=expiration,
     )
     session.add(log)
     session.commit()
@@ -58,13 +92,18 @@ def print_label(
 def print_preview(
     food_name: str = Form(...),
     initials: str = Form(...),
-    prepped_date: str = Form(...),
-    expiration_date: str = Form(""),
+    session: Session = Depends(get_session),
 ):
     """Renders the label as a PNG instead of printing it — used by Test Mode
     on the kitchen screen. Does not touch the printer or the print log."""
     staff_name = format_staff_name(initials)
-    zpl = build_zpl(food_name, staff_name, prepped_date, expiration_date or None)
+    prepped, expiration = _print_dates(session, food_name)
+    zpl = build_zpl(
+        food_name,
+        staff_name,
+        prepped.isoformat(),
+        expiration.isoformat() if expiration else None,
+    )
     try:
         png = render_preview_png(zpl)
     except PreviewError as exc:

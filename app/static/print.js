@@ -1,8 +1,6 @@
 (function () {
-  const appEl = document.querySelector(".app");
   const initialsEl = document.getElementById("initials");
   const toast = document.getElementById("toast");
-  const today = appEl.dataset.today;
 
   const savedInitials = localStorage.getItem("labelprinter_initials");
   if (savedInitials) initialsEl.value = savedInitials;
@@ -19,13 +17,6 @@
     }, 2500);
   }
 
-  function expirationFor(shelfLifeDays) {
-    if (!shelfLifeDays) return "";
-    const prepped = new Date(today + "T00:00:00");
-    prepped.setDate(prepped.getDate() + parseInt(shelfLifeDays, 10));
-    return prepped.toISOString().slice(0, 10);
-  }
-
   document.querySelectorAll(".print-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const card = btn.closest(".card");
@@ -37,11 +28,12 @@
       }
       localStorage.setItem("labelprinter_initials", name);
 
+      // No dates are sent: the server stamps prep/use-by from its own clock
+      // when the label is printed, so a screen left open for days still
+      // prints today's date.
       const body = new URLSearchParams({
         food_name: card.dataset.name,
         initials: name,
-        prepped_date: today,
-        expiration_date: expirationFor(card.dataset.shelfLife),
       });
 
       try {

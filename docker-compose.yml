@@ -7,4 +7,8 @@ services:
       - ./data:/data
     env_file:
       - .env
+    environment:
+      # Container clocks default to UTC; the label dates must follow the
+      # kitchen's local time.
+      - TZ=America/New_York
     restart: unless-stopped
