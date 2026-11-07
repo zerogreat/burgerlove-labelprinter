@@ -1,0 +1,40 @@
+name: Deploy to kitchen Pi
+
+# Manual dispatch only. A push to main should never deploy to a live
+# restaurant by itself — someone has to decide the change is ready.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-labelprinter
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Join tailnet
+        uses: tailscale/github-action@v4
+        with:
+          authkey: ${{ secrets.TS_AUTHKEY }}
+          hostname: gh-labelprinter-deploy
+          ping: ${{ secrets.PI_HOST }}
+
+      - name: Deploy over SSH
+        env:
+          PI_HOST: ${{ secrets.PI_HOST }}
+          PI_USER: ${{ secrets.PI_USER }}
+          PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
+          PI_KNOWN_HOSTS: ${{ secrets.PI_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$PI_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$PI_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -o StrictHostKeyChecking=yes -o BatchMode=yes -o ConnectTimeout=15 \
+              "$PI_USER@$PI_HOST" 'bash ~/deploy-labelprinter.sh'
